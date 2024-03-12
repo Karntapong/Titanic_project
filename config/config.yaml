@@ -1,0 +1,7 @@
+artifacts_root :artifacts
+
+data_ingestion:
+  root_dir:artifacts/data_ingestion
+  source_URL:https://raw.githubusercontent.com/Karntapong/dataset/main/Titanic.csv?token=GHSAT0AAAAAACPFZT5FRI5C2EW6AEVJHXPGZPQEETA
+  local_data_file:artifacts/data_ingestion
+  
