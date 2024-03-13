@@ -1,20 +1,14 @@
-from Titanic_classifier.components.data_ingestion import DataIngestion,DataIngestionConfig
-from Titanic_classifier import logger
+from Titanic_classifier.config.configuration import ConfigurationManager
+from Titanic_classifier.components.data_ingestion import DataIngestion
+from Titanic_classifier import logging
 
 STAGE_NAME = 'Data Training stage'
 class DataingestionTraningPipeline:
     def __init__(self):
         pass
     def main(self):
-        data_ingestion=DataIngestion()
-        train_data,test_data,df=data_ingestion.initiate_data_ingestion()
-
-if __name__ == '__main_':
-    try:
-        logger.info(f'>>>>stage {STAGE_NAME} started<<<<<<')
-        obj = DataingestionTraningPipeline()
-        obj.main()
-        logger.info(f'{STAGE_NAME}completed')
-    except Exception as e:
-        logger.exception(e)
-        raise e
+        config = ConfigurationManager()
+        data_ingestion_config = config.get_data_ingestion_config()
+        data_ingestion = DataIngestion(config=data_ingestion_config)
+        data_ingestion.download_file()
+        data_ingestion.extract_zip_file()

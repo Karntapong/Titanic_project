@@ -6,7 +6,9 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 from typing import Tuple
-
+from pathlib import Path
+import urllib.request as request
+import zipfile
 
 @dataclass
 class DataIngestionConfig:
@@ -16,30 +18,30 @@ class DataIngestionConfig:
 
 
 class DataIngestion:
-    def __init__(self):
-        self.ingestion_config = DataIngestionConfig()
-
-    def initiate_data_ingestion(self) -> Tuple[str, str, str]:
-        logging.info('Entered the data ingestion method or component')
+    def __init__(self,config: DataIngestionConfig):
+        self.config = config
+    def download_file(self):
         try:
-            df = pd.read_csv(r'research\Data\Titanic.csv')
-            logging.info('Read the dataset as dataframe')
-            os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True)
-            df.to_csv(self.ingestion_config.raw_data_path,index=False,header=True)
-            logging.info('Train test split initiated')
-            train_set,test_set = train_test_split(df,test_size=0.2,random_state = 42)
-            train_set.to_csv(self.ingestion_config.train_data_path,index= False,header=True)
-            test_set.to_csv(self.ingestion_config.test_data_path,index =False , header = True)
-            logging.info('Ingestion completed')
-            return (
-                self.ingestion_config.train_data_path,
-                self.ingestion_config.test_data_path,
-                self.ingestion_config.raw_data_path
-            )
+            if not os.path.exists(self.config.local_data_file):
+                filename, headers = request.urlretrieve(
+                    url=self.config.source_URL,
+                    filename=self.config.local_data_file
+                )
+                logging.info(f"{filename} downloaded! with following info: \n{headers}")
+            else:
+                logging.info(f"File already exists of size: {os.path.getsize(self.config.local_data_file)} bytes")
         except Exception as e:
-            logging.error(f'Error during data ingestion: {e}')
-            return "", "", ""
+            logging.error(f"An error occurred during file download: {e}")
 
-if __name__=="__main__":
-    obj=DataIngestion()
-    train_data,test_data,df=obj.initiate_data_ingestion()
+        
+    
+    def extract_zip_file(self):
+        """
+        zip_file_path: str
+        Extracts the zip file into the data directory
+        Function returns None
+        """
+        unzip_path = self.config.unzip_dir
+        os.makedirs(unzip_path, exist_ok=True)
+        with zipfile.ZipFile(self.config.local_data_file, 'r') as zip_ref:
+            zip_ref.extractall(unzip_path)

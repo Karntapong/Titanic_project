@@ -5,8 +5,8 @@ from Titanic_classifier.pipeline.stage01_data_ingestion import DataingestionTran
 STAGE_NAME = 'Data Training stage'
 try:
     logger.info(f'>>>>stage {STAGE_NAME} started<<<<<<')
-    obj = DataingestionTraningPipeline()
-    obj.main()
+    data_ingestion = DataingestionTraningPipeline()
+    data_ingestion.main()
     logger.info(f'{STAGE_NAME}completed')
 except Exception as e:
     logger.exception(e)
