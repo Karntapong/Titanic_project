@@ -9,13 +9,7 @@ from typing import Tuple
 from pathlib import Path
 import urllib.request as request
 import zipfile
-
-@dataclass
-class DataIngestionConfig:
-    train_data_path:str=os.path.join('artifacts','train.csv')
-    test_data_path:str=os.path.join('artifacts','test.csv')
-    raw_data_path:str=os.path.join('artifacts','data.csv')
-
+from Titanic_classifier.entity import DataIngestionConfig
 
 class DataIngestion:
     def __init__(self,config: DataIngestionConfig):

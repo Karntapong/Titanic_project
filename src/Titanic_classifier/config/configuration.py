@@ -1,6 +1,6 @@
 from Titanic_classifier.constant import *
 from Titanic_classifier.utils.common import read_yaml,create_directories
-from Titanic_classifier.entity import (DataIngestionConfig)
+from Titanic_classifier.entity import (DataIngestionConfig,DataTransformationConfig)
 
 
 class ConfigurationManager:
@@ -26,3 +26,15 @@ class ConfigurationManager:
         )
 
         return data_ingestion_config
+
+    def get_data_transformation_config(self) -> DataTransformationConfig:
+        config = self.config.data_transformation
+
+        create_directories([config.root_dir])
+
+        data_transformation_config = DataTransformationConfig(
+            root_dir=config.root_dir,
+            data_path=config.data_path,
+        )
+
+        return data_transformation_config
